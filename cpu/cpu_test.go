@@ -58,6 +58,9 @@ func TestCpuInfo(t *testing.T) {
 		if vv.ModelName == "" {
 			t.Errorf("could not get CPU Info: %v", vv)
 		}
+		if vv.Cores == 0 {
+			t.Errorf("got 0 CPU core: %v", vv)
+		}
 	}
 }
 

@@ -104,6 +104,7 @@ func CPUInfo() ([]CPUInfoStat, error) {
 
 	c := CPUInfoStat{}
 	for _, line := range lines {
+
 		if matches := regexp.MustCompile(`CPU:\s+(.+) \(([\d.]+).+\)`).FindStringSubmatch(line); matches != nil {
 			c.ModelName = matches[1]
 			t, err := strconv.ParseFloat(matches[2], 64)
@@ -130,6 +131,12 @@ func CPUInfo() ([]CPUInfoStat, error) {
 			}
 		} else if matches := regexp.MustCompile(`Logical CPUs per core: (\d+)`).FindStringSubmatch(line); matches != nil {
 			// FIXME: no this line?
+			t, err := strconv.ParseInt(matches[1], 10, 32)
+			if err != nil {
+				return ret, nil
+			}
+			c.Cores = int32(t)
+		} else if matches := regexp.MustCompile(`FreeBSD/SMP: Multiprocessor System Detected: (\d+) CPUs`).FindStringSubmatch(line); matches != nil {
 			t, err := strconv.ParseInt(matches[1], 10, 32)
 			if err != nil {
 				return ret, nil
